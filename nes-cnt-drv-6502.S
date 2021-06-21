@@ -26,7 +26,7 @@ _RIGHT_BUTTON_MASK  = %00000001
 .endmacro
 
 .segment "ZEROPAGE"
-_controlls:        .res 2 ; xxxxxxxxyyyyyyyy x:joy1, y:joy2 one bit per button
+_controls:        .res 2 ; xxxxxxxxyyyyyyyy x:joy1, y:joy2 one bit per button
 
 .segment "CODE"
 ; =======================================
@@ -56,89 +56,89 @@ _controlls:        .res 2 ; xxxxxxxxyyyyyyyy x:joy1, y:joy2 one bit per button
     LDA #$00
     STA _joy1
     
-    __polling_joy _joy1,_controlls+0
-    __polling_joy _joy2,_controlls+1
+    __polling_joy _joy1,_controls+0
+    __polling_joy _joy2,_controls+1
     RTS
 .endproc
 ; =======================================
 ; Exposed API Functions
 ; =======================================
 .proc read_joy1_right
-    __read _controlls+0, #_RIGHT_BUTTON_MASK
+    __read _controls+0, #_RIGHT_BUTTON_MASK
     RTS
 .endproc
 
 .proc read_joy1_left
-    __read _controlls+0, #_LEFT_BUTTON_MASK
+    __read _controls+0, #_LEFT_BUTTON_MASK
     RTS
 .endproc
 
 .proc read_joy1_up
-    __read _controlls+0, #_UP_BUTTON_MASK
+    __read _controls+0, #_UP_BUTTON_MASK
     RTS
 .endproc
 
 .proc read_joy1_down
-    __read _controlls+0, #_DOWN_BUTTON_MASK
+    __read _controls+0, #_DOWN_BUTTON_MASK
     RTS
 .endproc
 
 .proc read_joy1_A
-    __read _controlls+0, #_A_BUTTON_MASK
+    __read _controls+0, #_A_BUTTON_MASK
     RTS
 .endproc
 
 .proc read_joy1_B
-    __read _controlls+0, #_B_BUTTON_MASK
+    __read _controls+0, #_B_BUTTON_MASK
     RTS
 .endproc
 
 .proc read_joy1_select
-    __read _controlls+0, #_SELECT_BUTTON_MASK
+    __read _controls+0, #_SELECT_BUTTON_MASK
     RTS
 .endproc
 
 .proc read_joy1_start
-    __read _controlls+0, #_START_BUTTON_MASK
+    __read _controls+0, #_START_BUTTON_MASK
     RTS
 .endproc
 
 .proc read_joy2_right
-    __read _controlls+1, #_RIGHT_BUTTON_MASK
+    __read _controls+1, #_RIGHT_BUTTON_MASK
     RTS
 .endproc
 
 .proc read_joy2_left
-    __read _controlls+1, #_LEFT_BUTTON_MASK
+    __read _controls+1, #_LEFT_BUTTON_MASK
     RTS
 .endproc
 
 .proc read_joy2_up
-    __read _controlls+1, #_UP_BUTTON_MASK
+    __read _controls+1, #_UP_BUTTON_MASK
     RTS
 .endproc
 
 .proc read_joy2_down
-    __read _controlls+1, #_DOWN_BUTTON_MASK
+    __read _controls+1, #_DOWN_BUTTON_MASK
     RTS
 .endproc
 
 .proc read_joy2_A
-    __read _controlls+1, #_A_BUTTON_MASK
+    __read _controls+1, #_A_BUTTON_MASK
     RTS
 .endproc
 
 .proc read_joy2_B
-    __read _controlls+1, #_B_BUTTON_MASK
+    __read _controls+1, #_B_BUTTON_MASK
     RTS
 .endproc
 
 .proc read_joy2_select
-    __read _controlls+1, #_SELECT_BUTTON_MASK
+    __read _controls+1, #_SELECT_BUTTON_MASK
     RTS
 .endproc
 
 .proc read_joy2_start
-    __read _controlls+1, #_START_BUTTON_MASK
+    __read _controls+1, #_START_BUTTON_MASK
     RTS
 .endproc
