@@ -1,8 +1,9 @@
 CA65=ca65
-OBJS=nes-cnt-drv.o
+SRC=nes-cnt-drv-6502.asm
+OBJS=nes-cnt-drv-6502.o
 
-nes-cnt-drv.o : nes-cnt-drv.S
-	$(CA65) nes-cnt-drv.S
+$(OBJS) : $(SRC)
+	$(CA65) $(SRC)
 
 .PHONY: clean
 clean:
