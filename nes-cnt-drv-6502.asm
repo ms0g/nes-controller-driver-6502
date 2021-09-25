@@ -3,18 +3,18 @@
 ;----------------------------------------------------------------------
 
 ;----------------------------------------------------------------------
-; MMIO registers
+; MMIO Address Map
 ;----------------------------------------------------------------------
 _joy1_mmio=$4016
 _joy2_mmio=$4017
 
 ;----------------------------------------------------------------------
-; Read MMIO register
+; Read MMIO address
 ;----------------------------------------------------------------------
-.macro _read_mmio_reg mmio_reg, pad
+.macro _read_mmio_addr addr, pad
     LDX #$08
 :   
-    LDA mmio_reg
+    LDA addr
     LSR A
     ROL pad
     DEX
@@ -49,10 +49,10 @@ _pad2:      .res 1
     BEQ @pad1
     JMP @pad2
 @pad1:   
-    _read_mmio_reg _joy1_mmio, _pad1
+    _read_mmio_addr _joy1_mmio, _pad1
     JMP @done
 @pad2:   
-    _read_mmio_reg _joy2_mmio, _pad2
+    _read_mmio_addr _joy2_mmio, _pad2
 @done:
     RTS
 .endproc
