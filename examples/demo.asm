@@ -1,37 +1,42 @@
 .segment "CODE"
-.import init_cont_drv
-.import read_joy1_right
-.import read_joy1_up
-.import read_joy1_down
-.import read_joy1_left
-.import read_joy1_A
+.import _pad_trigger
+.imoprt _pad_state
 
 .proc main
 gameloop:
-  JSR init_cont_drv
+  LDA #$00
+  JSR _pad_trigger
   JSR readController
   JMP gameloop
 .endproc
 
 .proc readController
-  JSR read_joy1_right
+  LDA #$00
+  JSR _pad_state
+  AND #_RIGHT_BUTTON_MASK
   BEQ :+
-  JMP move_right
+  JMP move_right_func
 :
 ReadLeft:  
-  JSR read_joy1_left
+  LDA #$00
+  JSR _pad_state
+  AND #_LEFT_BUTTON_MASK
   BEQ :+
-  JMP move_left
+  JMP move_left_func
 :
 ReadUp:  
-  JSR read_joy1_up
+  LDA #$00
+  JSR _pad_state
+  AND #_UP_BUTTON_MASK
   BEQ :+
-  JMP move_up
+  JMP move_up_func
 :
 ReadDown:  
-  JSR read_joy1_down
+  LDA #$00
+  JSR _pad_state
+  AND #_DOWN_BUTTON_MASK
   BEQ :+
-  JMP move_down
+  JMP move_down_func
 :
   RTS
 .endproc

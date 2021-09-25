@@ -1,144 +1,76 @@
-_joy1=$4016
-_joy2=$4017
+;----------------------------------------------------------------------
+; Controller Driver for the Nintendo Entertainment System (NES)
+;----------------------------------------------------------------------
 
-_A_BUTTON_MASK      = %10000000
-_B_BUTTON_MASK      = %01000000
-_SELECT_BUTTON_MASK = %00100000
-_START_BUTTON_MASK  = %00010000
-_UP_BUTTON_MASK     = %00001000
-_DOWN_BUTTON_MASK   = %00000100
-_LEFT_BUTTON_MASK   = %00000010
-_RIGHT_BUTTON_MASK  = %00000001
+;----------------------------------------------------------------------
+; MMIO registers
+;----------------------------------------------------------------------
+_joy1_mmio=$4016
+_joy2_mmio=$4017
 
-.macro __polling_joy joy_reg, pad
+;----------------------------------------------------------------------
+; Read MMIO register
+;----------------------------------------------------------------------
+.macro _read_mmio_reg mmio_reg, pad
     LDX #$08
-:  
-    LDA joy_reg
+:   
+    LDA mmio_reg
     LSR A
     ROL pad
     DEX
     BNE :-
 .endmacro
 
-.macro __read val, mask
-    LDA val
-    AND mask
-.endmacro
-
 .segment "ZEROPAGE"
-_controls:        .res 2 ; xxxxxxxxyyyyyyyy x:joy1, y:joy2 one bit per button
+_pad1:      .res 1
+_pad2:      .res 1
 
 .segment "CODE"
-; =======================================
-; Exposed API
-; =======================================
-.export init_cont_drv
-.export read_joy1_right
-.export read_joy1_left
-.export read_joy1_up
-.export read_joy1_down
-.export read_joy1_A
-.export read_joy1_B
-.export read_joy1_select
-.export read_joy1_start
-.export read_joy2_right
-.export read_joy2_left
-.export read_joy2_up
-.export read_joy2_down
-.export read_joy2_A
-.export read_joy2_B
-.export read_joy2_select
-.export read_joy2_start
+.export _pad_trigger
+.export _pad_state
 
-.proc init_cont_drv
+;----------------------------------------------------------------------
+; Pad Trigger:
+; This is the function that polls the controller.
+; It is called from the main loop.
+; * A: 0=joy1, 1=joy2
+; * bit:       7     6     5     4     3     2     1     0
+; * button:    A     B   select start  up   down  left right
+;----------------------------------------------------------------------
+.proc _pad_trigger
+    PHA
     LDA #$01
-    STA _joy1
+    STA _joy1_mmio
     LDA #$00
-    STA _joy1
+    STA _joy1_mmio
     
-    __polling_joy _joy1,_controls+0
-    __polling_joy _joy2,_controls+1
-    RTS
-.endproc
-; =======================================
-; Exposed API Functions
-; =======================================
-.proc read_joy1_right
-    __read _controls+0, #_RIGHT_BUTTON_MASK
-    RTS
-.endproc
-
-.proc read_joy1_left
-    __read _controls+0, #_LEFT_BUTTON_MASK
+    PLA
+    CMP #$00
+    BEQ @pad1
+    JMP @pad2
+@pad1:   
+    _read_mmio_reg _joy1_mmio, _pad1
+    JMP @done
+@pad2:   
+    _read_mmio_reg _joy2_mmio, _pad2
+@done:
     RTS
 .endproc
 
-.proc read_joy1_up
-    __read _controls+0, #_UP_BUTTON_MASK
-    RTS
-.endproc
-
-.proc read_joy1_down
-    __read _controls+0, #_DOWN_BUTTON_MASK
-    RTS
-.endproc
-
-.proc read_joy1_A
-    __read _controls+0, #_A_BUTTON_MASK
-    RTS
-.endproc
-
-.proc read_joy1_B
-    __read _controls+0, #_B_BUTTON_MASK
-    RTS
-.endproc
-
-.proc read_joy1_select
-    __read _controls+0, #_SELECT_BUTTON_MASK
-    RTS
-.endproc
-
-.proc read_joy1_start
-    __read _controls+0, #_START_BUTTON_MASK
-    RTS
-.endproc
-
-.proc read_joy2_right
-    __read _controls+1, #_RIGHT_BUTTON_MASK
-    RTS
-.endproc
-
-.proc read_joy2_left
-    __read _controls+1, #_LEFT_BUTTON_MASK
-    RTS
-.endproc
-
-.proc read_joy2_up
-    __read _controls+1, #_UP_BUTTON_MASK
-    RTS
-.endproc
-
-.proc read_joy2_down
-    __read _controls+1, #_DOWN_BUTTON_MASK
-    RTS
-.endproc
-
-.proc read_joy2_A
-    __read _controls+1, #_A_BUTTON_MASK
-    RTS
-.endproc
-
-.proc read_joy2_B
-    __read _controls+1, #_B_BUTTON_MASK
-    RTS
-.endproc
-
-.proc read_joy2_select
-    __read _controls+1, #_SELECT_BUTTON_MASK
-    RTS
-.endproc
-
-.proc read_joy2_start
-    __read _controls+1, #_START_BUTTON_MASK
+;----------------------------------------------------------------------
+; Pad State:
+; This is the function that returns the current state of the pad.
+; * A: 0=joy1, 1=joy2
+;----------------------------------------------------------------------
+.proc _pad_state
+    CMP #$00
+    BEQ :+
+    JMP :++
+:   
+    LDA _pad1
+    JMP @done
+:   
+    LDA _pad2
+@done:
     RTS
 .endproc
