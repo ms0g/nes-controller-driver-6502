@@ -30,7 +30,7 @@ _pad2:      .res 1
 .export _pad_state
 
 ;----------------------------------------------------------------------
-; Pad Trigger:
+; void __fastcall__ pad_trigger(unsigned char pad);
 ; This is the function that polls the controller.
 ; It is called from the main loop.
 ; * A: 0=joy1, 1=joy2
@@ -58,7 +58,7 @@ _pad2:      .res 1
 .endproc
 
 ;----------------------------------------------------------------------
-; Pad State:
+; unsigned char __fastcall__ pad_state(unsigned char pad);
 ; This is the function that returns the current state of the pad.
 ; * A: 0=joy1, 1=joy2
 ;----------------------------------------------------------------------
