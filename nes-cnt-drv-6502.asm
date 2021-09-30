@@ -22,15 +22,14 @@ _joy2_mmio=$4017
 .endmacro
 
 .segment "ZEROPAGE"
-_pad1:      .res 1
-_pad2:      .res 1
+_pad:   .res 2
 
 .segment "CODE"
 .export _pad_trigger
 .export _pad_state
 
 ;----------------------------------------------------------------------
-; void __fastcall__ pad_trigger(unsigned char pad);
+; unsigned char __fastcall__ pad_trigger(unsigned char pad);
 ; This is the function that polls the controller.
 ; It is called from the main loop.
 ; * A: 0=joy1, 1=joy2
@@ -38,39 +37,33 @@ _pad2:      .res 1
 ; * button:    A     B   select start  up   down  left right
 ;----------------------------------------------------------------------
 .proc _pad_trigger
-    PHA
+    TAY
     LDA #$01
     STA _joy1_mmio
     LDA #$00
     STA _joy1_mmio
     
-    PLA
+    TYA
     CMP #$00
     BEQ @pad1
     JMP @pad2
 @pad1:   
-    _read_mmio_addr _joy1_mmio, _pad1
+    _read_mmio_addr _joy1_mmio, _pad+0
     JMP @done
 @pad2:   
-    _read_mmio_addr _joy2_mmio, _pad2
+    _read_mmio_addr _joy2_mmio, _pad+1
 @done:
+    LDA _pad,Y
     RTS
 .endproc
 
 ;----------------------------------------------------------------------
 ; unsigned char __fastcall__ pad_state(unsigned char pad);
-; This is the function that returns the current state of the pad.
+; This is the function that returns the previous state of the pad.
 ; * A: 0=joy1, 1=joy2
 ;----------------------------------------------------------------------
 .proc _pad_state
-    CMP #$00
-    BEQ :+
-    JMP :++
-:   
-    LDA _pad1
-    JMP @done
-:   
-    LDA _pad2
-@done:
+    TAX
+    LDA _pad,X
     RTS
 .endproc

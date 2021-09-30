@@ -1,7 +1,7 @@
 // poll controller, input is pad number (0 or 1)
-void __fastcall__ pad_trigger(unsigned char pad);
+unsigned char __fastcall__ pad_trigger(unsigned char pad);
 
-// get pad state, input is pad number (0 or 1)
+// get previous pad state, input is pad number (0 or 1)
 unsigned char __fastcall__ pad_state(unsigned char pad);
 
 #define A_BUTTON_MASK			0x80

@@ -9,8 +9,7 @@ unsigned char pad1;
 void main (void) {
 	
 	while (1){
-		pad_trigger(PAD1); // read the first controller
-		pad1 = pad_state(PAD1); // get the state of the controller
+		pad1=pad_trigger(PAD1); // read the first controller
 		
 		if (pad1 & LEFT_BUTTON_MASK){
 			;
