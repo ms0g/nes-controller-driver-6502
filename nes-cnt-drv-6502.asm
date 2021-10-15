@@ -1,15 +1,15 @@
 ;----------------------------------------------------------------------
-; Controller Driver for the Nintendo Entertainment System (NES)
+; Controller Driver for the Nintendo Entertainment System (NES)       ;
 ;----------------------------------------------------------------------
 
 ;----------------------------------------------------------------------
-; MMIO Address Map
+; MMIO Address Map                                                    ;
 ;----------------------------------------------------------------------
 _joy1_mmio=$4016
 _joy2_mmio=$4017
 
 ;----------------------------------------------------------------------
-; Read MMIO address
+; Read MMIO address                                                   ;
 ;----------------------------------------------------------------------
 .macro _read_mmio_addr addr, pad
     LDX #$08
@@ -29,12 +29,12 @@ _pad:   .res 2
 .export _pad_state
 
 ;----------------------------------------------------------------------
-; unsigned char __fastcall__ pad_trigger(unsigned char pad);
-; This is the function that polls the controller.
-; It is called from the main loop.
-; * A: 0=joy1, 1=joy2
-; * bit:       7     6     5     4     3     2     1     0
-; * button:    A     B   select start  up   down  left right
+; unsigned char __fastcall__ pad_trigger(unsigned char pad);          ;
+; This is the function that polls the controller.                     ;
+; It is called from the main loop.                                    ;
+; * A: 0=joy1, 1=joy2                                                 ;
+; * bit:       7     6     5     4     3     2     1     0            ;
+; * button:    A     B   select start  up   down  left right          ;
 ;----------------------------------------------------------------------
 .proc _pad_trigger
     TAY
@@ -58,9 +58,9 @@ _pad:   .res 2
 .endproc
 
 ;----------------------------------------------------------------------
-; unsigned char __fastcall__ pad_state(unsigned char pad);
-; This is the function that returns the previous state of the pad.
-; * A: 0=joy1, 1=joy2
+; unsigned char __fastcall__ pad_state(unsigned char pad);            ;
+; This is the function that returns the previous state of the pad.    ;
+; * A: 0=joy1, 1=joy2                                                 ;
 ;----------------------------------------------------------------------
 .proc _pad_state
     TAX
